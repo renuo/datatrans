@@ -38,6 +38,32 @@ describe Datatrans::Web::Transaction do
         :responseMessage => "YellowPay transaction Ok"
     })
 
+    @canceled_response = {
+      status: 'cancel',
+      returnCustomerCountry: 'CHE',
+      sign: '95f3123246e628eab6469c636e0d3f06',
+      aliasCC: '70323122544311173',
+      maskedCC: '520000xxxxxx0007',
+      errorMessage: 'declined',
+      useAlias: 'yes',
+      expm: '12',
+      errorCode: '1403',
+      testOnly: 'yes',
+      currency: 'CHF',
+      amount: '1000',
+      hiddenMode: 'yes',
+      expy: '14',
+      merchantId: '1100000000',
+      errorDetail: 'Declined',
+      uppTransactionId: '110808173951050102',
+      refno: '1',
+      uppMsgType: 'web',
+      uppCustomerName: '',
+      pmethod: 'ECA',
+      reqtype: 'NOA',
+      uppCustomerEmail: 'customer@email.com'
+    }
+
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
@@ -99,7 +125,7 @@ describe Datatrans::Web::Transaction do
 
   context "successful response (swiss post)" do
     before do
-      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_swisspost_response)
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@successful_swisspost_response)
     end
 
     context "process" do
@@ -110,7 +136,18 @@ describe Datatrans::Web::Transaction do
     end
   end
 
-  context "compromised response" do
+  context 'canceled response' do
+    before do
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@canceled_response)
+      @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+    end
+
+    it 'handles a canceled datatrans authorize response' do
+      expect(@transaction.authorize).to be false
+    end
+  end
+
+  context 'compromised response' do
     before do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
