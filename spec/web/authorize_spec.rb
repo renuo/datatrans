@@ -105,7 +105,7 @@ describe Datatrans::Web::Transaction do
     context "process" do
       it "handles a valid datatrans authorize response" do
         @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
-        @transaction.authorize.should be_true
+        expect(@transaction.authorize).to be true
       end
     end
   end
