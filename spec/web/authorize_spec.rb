@@ -38,31 +38,9 @@ describe Datatrans::Web::Transaction do
         :responseMessage => "YellowPay transaction Ok"
     })
 
-    @canceled_response = {
+    @canceled_response = @successful_response.merge({
       status: 'cancel',
-      returnCustomerCountry: 'CHE',
-      sign: '95f3123246e628eab6469c636e0d3f06',
-      aliasCC: '70323122544311173',
-      maskedCC: '520000xxxxxx0007',
-      errorMessage: 'declined',
-      useAlias: 'yes',
-      expm: '12',
-      errorCode: '1403',
-      testOnly: 'yes',
-      currency: 'CHF',
-      amount: '1000',
-      hiddenMode: 'yes',
-      expy: '14',
-      merchantId: '1100000000',
-      errorDetail: 'Declined',
-      uppTransactionId: '110808173951050102',
-      refno: '1',
-      uppMsgType: 'web',
-      uppCustomerName: '',
-      pmethod: 'ECA',
-      reqtype: 'NOA',
-      uppCustomerEmail: 'customer@email.com'
-    }
+    })
 
     @failed_response = {
       :status => "error",
