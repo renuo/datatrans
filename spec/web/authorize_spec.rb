@@ -39,7 +39,7 @@ describe Datatrans::Web::Transaction do
     })
 
     @canceled_response = @successful_response.merge({
-      status: 'cancel',
+      status: "cancel",
     })
 
     @failed_response = {
@@ -114,18 +114,18 @@ describe Datatrans::Web::Transaction do
     end
   end
 
-  context 'canceled response' do
+  context "canceled response" do
     before do
       allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@canceled_response)
       @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
     end
 
-    it 'handles a canceled datatrans authorize response' do
+    it "handles a canceled datatrans authorize response" do
       expect(@transaction.authorize).to be false
     end
   end
 
-  context 'compromised response' do
+  context "compromised response" do
     before do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
